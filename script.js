@@ -35,19 +35,27 @@ function cargarPatronPersonalizado() {
   div.innerHTML = "";
 
   const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
-  renderer.resize(700, 200);
+  renderer.resize(1600, 200); // espacio para partitura larga
   const context = renderer.getContext();
-  const stave = new VF.Stave(10, 40, 650);
+
+  const stave = new VF.Stave(10, 40, 1550);
   stave.addClef("percussion").setContext(context).draw();
 
-  const notas = [
-    "f/4", "c/5", "g/5", "c/5", "f/4", "g/5", "c/5", "g/5"
-  ];
+  // Crear patrón largo: 32 notas (8 compases)
+  const notas = [];
+  for (let i = 0; i < 32; i++) {
+    const tipo = i % 4;
+    if (tipo === 0) notas.push("f/4");      // bombo
+    else if (tipo === 1) notas.push("c/5"); // caja
+    else if (tipo === 2) notas.push("g/5"); // hi-hat
+    else notas.push("c/5");                 // caja
+  }
+
   const notes = notas.map(n => new VF.StaveNote({ keys: [n], duration: "8", clef: "percussion" }));
 
-  const voice = new VF.Voice({ num_beats: 4, beat_value: 4 });
+  const voice = new VF.Voice({ num_beats: 16, beat_value: 8 });
   voice.addTickables(notes);
-  new VF.Formatter().joinVoices([voice]).format([voice], 600);
+  new VF.Formatter().joinVoices([voice]).format([voice], 1500);
   voice.draw(context, stave);
 
   window.notesSVG = div.querySelectorAll("svg .vf-note");
@@ -75,17 +83,17 @@ function cargarPatronGuardado() {
   div.innerHTML = "";
 
   const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
-  renderer.resize(700, 200);
+  renderer.resize(1600, 200);
   const context = renderer.getContext();
-  const stave = new VF.Stave(10, 40, 650);
+  const stave = new VF.Stave(10, 40, 1550);
   stave.addClef("percussion").setContext(context).draw();
 
   const notas = JSON.parse(datos);
   const notes = notas.map(n => new VF.StaveNote({ keys: [n], duration: "8", clef: "percussion" }));
 
-  const voice = new VF.Voice({ num_beats: 4, beat_value: 4 });
+  const voice = new VF.Voice({ num_beats: notas.length / 2, beat_value: 8 });
   voice.addTickables(notes);
-  new VF.Formatter().joinVoices([voice]).format([voice], 600);
+  new VF.Formatter().joinVoices([voice]).format([voice], 1500);
   voice.draw(context, stave);
 
   window.notesSVG = div.querySelectorAll("svg .vf-note");
