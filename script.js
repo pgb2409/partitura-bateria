@@ -5,7 +5,7 @@ window.onload = function () {
 function dibujarPartituraBasica() {
   const VF = Vex.Flow;
   const div = document.getElementById("partitura");
-  div.innerHTML = ""; // limpiar contenido anterior
+  div.innerHTML = "";
 
   const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
   renderer.resize(600, 200);
@@ -31,7 +31,7 @@ function dibujarPartituraBasica() {
 function cargarPatronPersonalizado() {
   const VF = Vex.Flow;
   const div = document.getElementById("partitura");
-  div.innerHTML = ""; // limpiar contenido anterior
+  div.innerHTML = "";
 
   const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
   renderer.resize(700, 200);
@@ -40,9 +40,9 @@ function cargarPatronPersonalizado() {
   stave.addClef("percussion").setContext(context).draw();
 
   const notes = [
-    new VF.StaveNote({ keys: ["f/4"], duration: "8", clef: "percussion" }), // bombo
-    new VF.StaveNote({ keys: ["c/5"], duration: "8", clef: "percussion" }), // caja
-    new VF.StaveNote({ keys: ["g/5"], duration: "8", clef: "percussion" }), // hi-hat
+    new VF.StaveNote({ keys: ["f/4"], duration: "8", clef: "percussion" }),
+    new VF.StaveNote({ keys: ["c/5"], duration: "8", clef: "percussion" }),
+    new VF.StaveNote({ keys: ["g/5"], duration: "8", clef: "percussion" }),
     new VF.StaveNote({ keys: ["c/5"], duration: "8", clef: "percussion" }),
     new VF.StaveNote({ keys: ["f/4"], duration: "8", clef: "percussion" }),
     new VF.StaveNote({ keys: ["g/5"], duration: "8", clef: "percussion" }),
@@ -65,6 +65,9 @@ function reproducirAudio() {
     return;
   }
 
+  const bpm = parseInt(document.getElementById("bpmInput").value) || 120;
+  const intervaloMs = 60000 / bpm;
+
   const file = fileInput.files[0];
   const url = URL.createObjectURL(file);
   const audio = new Audio(url);
@@ -80,7 +83,7 @@ function reproducirAudio() {
     } else {
       clearInterval(intervalo);
     }
-  }, 500);
+  }, intervaloMs);
 }
 
 function exportarPDF() {
