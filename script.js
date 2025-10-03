@@ -1,19 +1,37 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Partitura-Batería</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <h1>Partitura-Batería</h1>
+window.onload = function () {
+  const VF = Vex.Flow;
+  const div = document.getElementById("partitura");
+  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+  renderer.resize(600, 200);
+  const context = renderer.getContext();
+  const stave = new VF.Stave(10, 40, 500);
+  stave.addClef("percussion").setContext(context).draw();
 
-  <div id="partitura"></div>
+  const notes = [
+    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }),
+    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }),
+    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }),
+    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }),
+  ];
 
-  <input type="file" id="audioInput" accept="audio/*" />
-  <button onclick="reproducirAudio()">▶️ Reproducir</button>
-  <button onclick="exportarPDF()">📄 Exportar a PDF</button>
+  const voice = new VF.Voice({ num_beats: 4, beat_value: 4 });
+  voice.addTickables(notes);
+  new VF.Formatter().joinVoices([voice]).format([voice], 400);
+  voice.draw(context, stave);
+};
 
-  <!-- ✅ Primero se cargan las librerías -->
-  <script src="https://unpkg.com/vexflow/releases/vexflow-min.js">
+function exportarPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.text("Partitura exportada", 10, 10);
+  doc.save("partitura.pdf");
+}
+
+function reproducirAudio() {
+  const fileInput = document.getElementById("audioInput");
+  if (fileInput.files.length === 0) return;
+  const file = fileInput.files[0];
+  const url = URL.createObjectURL(file);
+  const player = new Audio(url);
+  player.play();
+}
