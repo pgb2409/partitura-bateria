@@ -10,13 +10,14 @@
 <body>
   <h1>🥁 Visualizador de Partituras de Batería</h1>
 
+  <!-- Visor de MusicXML -->
   <section id="visor">
     <p>Carga tu archivo MusicXML para visualizar la partitura:</p>
     <input type="file" id="musicxmlInput" accept=".musicxml">
     <canvas id="canvas" width="800" height="400"></canvas>
   </section>
 
-  <!-- 🔽 Conversor MP3 → MusicXML -->
+  <!-- Conversor MP3 → MusicXML -->
   <section id="convertidor" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc;">
     <h2>🎵 Convertir audio MP3 a MusicXML</h2>
     <form id="uploadForm">
@@ -26,6 +27,7 @@
     <p id="status" style="margin-top: 10px;"></p>
   </section>
 
+  <!-- Scripts -->
   <script src="script.js"></script>
   <script>
     // Conversión MP3 → MusicXML
