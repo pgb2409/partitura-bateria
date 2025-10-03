@@ -26,6 +26,7 @@ function dibujarPartituraBasica() {
   voice.draw(context, stave);
 
   window.notesSVG = div.querySelectorAll("svg .vf-note");
+  window.patronActual = ["c/5", "c/5", "c/5", "c/5"];
 }
 
 function cargarPatronPersonalizado() {
@@ -39,16 +40,10 @@ function cargarPatronPersonalizado() {
   const stave = new VF.Stave(10, 40, 650);
   stave.addClef("percussion").setContext(context).draw();
 
-  const notes = [
-    new VF.StaveNote({ keys: ["f/4"], duration: "8", clef: "percussion" }),
-    new VF.StaveNote({ keys: ["c/5"], duration: "8", clef: "percussion" }),
-    new VF.StaveNote({ keys: ["g/5"], duration: "8", clef: "percussion" }),
-    new VF.StaveNote({ keys: ["c/5"], duration: "8", clef: "percussion" }),
-    new VF.StaveNote({ keys: ["f/4"], duration: "8", clef: "percussion" }),
-    new VF.StaveNote({ keys: ["g/5"], duration: "8", clef: "percussion" }),
-    new VF.StaveNote({ keys: ["c/5"], duration: "8", clef: "percussion" }),
-    new VF.StaveNote({ keys: ["g/5"], duration: "8", clef: "percussion" }),
+  const notas = [
+    "f/4", "c/5", "g/5", "c/5", "f/4", "g/5", "c/5", "g/5"
   ];
+  const notes = notas.map(n => new VF.StaveNote({ keys: [n], duration: "8", clef: "percussion" }));
 
   const voice = new VF.Voice({ num_beats: 4, beat_value: 4 });
   voice.addTickables(notes);
@@ -56,6 +51,45 @@ function cargarPatronPersonalizado() {
   voice.draw(context, stave);
 
   window.notesSVG = div.querySelectorAll("svg .vf-note");
+  window.patronActual = notas;
+}
+
+function guardarPatron() {
+  const nombre = prompt("Nombre del patrón:");
+  if (nombre && window.patronActual) {
+    localStorage.setItem("patron_" + nombre, JSON.stringify(window.patronActual));
+    alert("Patrón guardado como: " + nombre);
+  }
+}
+
+function cargarPatronGuardado() {
+  const nombre = prompt("Nombre del patrón a cargar:");
+  const datos = localStorage.getItem("patron_" + nombre);
+  if (!datos) {
+    alert("No se encontró ningún patrón con ese nombre.");
+    return;
+  }
+
+  const VF = Vex.Flow;
+  const div = document.getElementById("partitura");
+  div.innerHTML = "";
+
+  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+  renderer.resize(700, 200);
+  const context = renderer.getContext();
+  const stave = new VF.Stave(10, 40, 650);
+  stave.addClef("percussion").setContext(context).draw();
+
+  const notas = JSON.parse(datos);
+  const notes = notas.map(n => new VF.StaveNote({ keys: [n], duration: "8", clef: "percussion" }));
+
+  const voice = new VF.Voice({ num_beats: 4, beat_value: 4 });
+  voice.addTickables(notes);
+  new VF.Formatter().joinVoices([voice]).format([voice], 600);
+  voice.draw(context, stave);
+
+  window.notesSVG = div.querySelectorAll("svg .vf-note");
+  window.patronActual = notas;
 }
 
 function reproducirAudio() {
