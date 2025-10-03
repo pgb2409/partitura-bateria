@@ -1,21 +1,20 @@
-self.addEventListener("install", (event) => {
+self.addEventListener('install', function (event) {
   event.waitUntil(
-    caches.open("partitura-cache").then((cache) =>
-      cache.addAll([
-        "./",
-        "./index.html",
-        "./script.js",
-        "./style.css",
-        "./manifest.json",
-        "https://cdn.jsdelivr.net/npm/vexflow@1.2.93/releases/vexflow-min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
-      ])
-    )
+    caches.open('bateria-cache').then(function (cache) {
+      return cache.addAll([
+        'index.html',
+        'style.css',
+        'script.js',
+        'manifest.json'
+      ]);
+    })
   );
 });
 
-self.addEventListener("fetch", (event) => {
+self.addEventListener('fetch', function (event) {
   event.respondWith(
-    caches.match(event.request).then((response) => response || fetch(event.request))
+    caches.match(event.request).then(function (response) {
+      return response || fetch(event.request);
+    })
   );
 });

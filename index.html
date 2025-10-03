@@ -2,62 +2,27 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Partitura-Batería</title>
-  <link rel="manifest" href="manifest.json" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Partitura Batería</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-    canvas {
-      border: 1px solid #ccc;
-      margin-top: 20px;
-    }
-    .bloque {
-      margin: 20px 0;
-    }
-    label {
-      font-weight: bold;
-    }
-  </style>
 </head>
 <body>
-  <h1>Partitura-Batería</h1>
+  <h1>Partitura de Batería</h1>
 
-  <!-- ✅ Botón para subir audio (la canción) -->
   <div class="bloque">
     <label for="audioInput">🎵 Subir canción (audio):</label>
     <input type="file" id="audioInput" accept="audio/*" />
+    <button onclick="reproducirAudio()">Reproducir</button>
   </div>
 
-  <!-- ✅ Botón para cargar partitura MusicXML -->
   <div class="bloque">
     <label for="musicxmlInput">📄 Cargar partitura MusicXML:</label>
-    <input type="file" id="musicxmlInput" accept=".xml,.musicxml" />
+    <input type="file" id="musicxmlInput" accept=".musicxml,.xml" />
+    <button onclick="cargarMusicXML()">Mostrar partitura</button>
   </div>
 
-  <!-- Botones existentes -->
-  <div class="bloque">
-    <button id="playButton">▶️ Reproducir audio</button>
-    <button id="exportButton">📄 Exportar PDF</button>
-    <button id="savePattern">💾 Guardar patrón</button>
-    <button id="loadPattern">📂 Cargar patrón guardado</button>
-  </div>
+  <canvas id="canvas" width="800" height="400"></canvas>
 
-  <!-- Entrada de patrón personalizado -->
-  <div class="bloque">
-    <input type="text" id="patternInput" placeholder="bombo,caja,hihat..." />
-    <label for="bpm">🎚️ BPM:</label>
-    <input type="number" id="bpm" value="120" />
-  </div>
-
-  <!-- Canvas para partitura -->
-  <canvas id="partitura" width="1000" height="200"></canvas>
-
-  <!-- Librería VexFlow para notación real -->
-  <script src="https://unpkg.com/vexflow/releases/vexflow-min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
