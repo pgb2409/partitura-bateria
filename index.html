@@ -2,36 +2,33 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Partitura-Batería</title>
+  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <h1>Partitura-Batería</h1>
 
-  <div id="partitura"></div>
+  <!-- NUEVO: Cargar archivo MusicXML -->
+  <input type="file" id="musicxmlInput" accept=".xml,.musicxml" />
+  <p><em>Cargar partitura real en formato MusicXML</em></p>
 
-  <input type="file" id="audioInput" accept="audio/*" />
-  <button onclick="reproducirAudio()">▶️ Reproducir</button>
-  <button onclick="exportarPDF()">📄 Exportar a PDF</button>
-  <button onclick="cargarPatronPersonalizado()">🎼 Cargar patrón</button>
+  <!-- Botones existentes -->
+  <button id="playButton">Reproducir audio</button>
+  <button id="exportButton">Exportar PDF</button>
+  <button id="savePattern">Guardar patrón</button>
+  <button id="loadPattern">Cargar patrón guardado</button>
 
-  <br /><br />
-  <label for="bpmInput">🎚️ BPM:</label>
-  <input type="number" id="bpmInput" value="120" min="40" max="240" />
+  <!-- Entrada de patrón personalizado -->
+  <input type="text" id="patternInput" placeholder="bombo,caja,hihat..." />
+  <label for="bpm">BPM:</label>
+  <input type="number" id="bpm" value="120" />
 
-  <!-- ✅ Librerías externas -->
-  <script src="https://cdn.jsdelivr.net/npm/vexflow@1.2.93/releases/vexflow-min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Canvas para partitura -->
+  <canvas id="partitura"></canvas>
 
-  <!-- ✅ Tu script -->
+  <!-- Librería VexFlow para notación real -->
+  <script src="https://unpkg.com/vexflow/releases/vexflow-min.js"></script>
   <script src="script.js"></script>
-
-  <!-- ✅ Registro del service worker -->
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js");
-    }
-  </script>
 </body>
 </html>
