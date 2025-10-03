@@ -1,17 +1,18 @@
 window.onload = function () {
+  dibujarPartituraBasica();
+};
+
+function dibujarPartituraBasica() {
   const VF = Vex.Flow;
   const div = document.getElementById("partitura");
+  div.innerHTML = ""; // limpiar contenido anterior
 
-  // Crear el renderizador SVG
   const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
   renderer.resize(600, 200);
   const context = renderer.getContext();
-
-  // Crear el pentagrama
   const stave = new VF.Stave(10, 40, 500);
   stave.addClef("percussion").setContext(context).draw();
 
-  // Crear las notas de batería (4 golpes de caja)
   const notes = [
     new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }),
     new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }),
@@ -19,15 +20,43 @@ window.onload = function () {
     new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }),
   ];
 
-  // Crear la voz y formatear
   const voice = new VF.Voice({ num_beats: 4, beat_value: 4 });
   voice.addTickables(notes);
   new VF.Formatter().joinVoices([voice]).format([voice], 400);
   voice.draw(context, stave);
 
-  // Guardar referencias SVG para sincronización
   window.notesSVG = div.querySelectorAll("svg .vf-note");
-};
+}
+
+function cargarPatronPersonalizado() {
+  const VF = Vex.Flow;
+  const div = document.getElementById("partitura");
+  div.innerHTML = ""; // limpiar contenido anterior
+
+  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+  renderer.resize(700, 200);
+  const context = renderer.getContext();
+  const stave = new VF.Stave(10, 40, 650);
+  stave.addClef("percussion").setContext(context).draw();
+
+  const notes = [
+    new VF.StaveNote({ keys: ["f/4"], duration: "8", clef: "percussion" }), // bombo
+    new VF.StaveNote({ keys: ["c/5"], duration: "8", clef: "percussion" }), // caja
+    new VF.StaveNote({ keys: ["g/5"], duration: "8", clef: "percussion" }), // hi-hat
+    new VF.StaveNote({ keys: ["c/5"], duration: "8", clef: "percussion" }),
+    new VF.StaveNote({ keys: ["f/4"], duration: "8", clef: "percussion" }),
+    new VF.StaveNote({ keys: ["g/5"], duration: "8", clef: "percussion" }),
+    new VF.StaveNote({ keys: ["c/5"], duration: "8", clef: "percussion" }),
+    new VF.StaveNote({ keys: ["g/5"], duration: "8", clef: "percussion" }),
+  ];
+
+  const voice = new VF.Voice({ num_beats: 4, beat_value: 4 });
+  voice.addTickables(notes);
+  new VF.Formatter().joinVoices([voice]).format([voice], 600);
+  voice.draw(context, stave);
+
+  window.notesSVG = div.querySelectorAll("svg .vf-note");
+}
 
 function reproducirAudio() {
   const fileInput = document.getElementById("audioInput");
@@ -41,7 +70,6 @@ function reproducirAudio() {
   const audio = new Audio(url);
   audio.play();
 
-  // Sincronización visual tipo karaoke (simulada)
   let i = 0;
   const notas = window.notesSVG;
   const intervalo = setInterval(() => {
@@ -52,7 +80,7 @@ function reproducirAudio() {
     } else {
       clearInterval(intervalo);
     }
-  }, 500); // cada 500ms
+  }, 500);
 }
 
 function exportarPDF() {
@@ -65,7 +93,6 @@ function exportarPDF() {
     return;
   }
 
-  // Convertir SVG a imagen PNG y añadir al PDF
   svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
   const svgData = new XMLSerializer().serializeToString(svgElement);
   const canvas = document.createElement("canvas");
