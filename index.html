@@ -1,34 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Partitura Batería</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partitura de Batería</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <h1>Partitura de Batería</h1>
+  <h1>🥁 Visualizador de Partituras de Batería</h1>
 
-  <div class="bloque">
-    <label for="audioInput">🎵 Subir canción (audio):</label>
-    <input type="file" id="audioInput" accept="audio/*" />
-    <button onclick="reproducirAudio()">Reproducir</button>
-  </div>
+  <section id="visor">
+    <p>Carga tu archivo MusicXML para visualizar la partitura:</p>
+    <input type="file" id="musicxmlInput" accept=".musicxml">
+    <canvas id="canvas" width="800" height="400"></canvas>
+  </section>
 
-  <div class="bloque">
-    <label for="musicxmlInput">📄 Cargar partitura MusicXML:</label>
-    <input type="file" id="musicxmlInput" accept=".musicxml,.xml" />
-    <button onclick="cargarMusicXML()">Mostrar partitura</button>
-  </div>
-
-  <canvas id="canvas" width="800" height="400"></canvas>
-
-  <script src="script.js"></script>
-  <!-- Actualización forzada por Pablo -->
-<!-- Actualización forzada por Pablo -->
-    <!-- ...tu contenido actual... -->
-
-  <!-- 🔽 Pegas aquí el bloque del conversor -->
+  <!-- 🔽 Conversor MP3 → MusicXML -->
   <section id="convertidor" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc;">
     <h2>🎵 Convertir audio MP3 a MusicXML</h2>
     <form id="uploadForm">
@@ -38,7 +26,9 @@
     <p id="status" style="margin-top: 10px;"></p>
   </section>
 
+  <script src="script.js"></script>
   <script>
+    // Conversión MP3 → MusicXML
     const form = document.getElementById('uploadForm');
     const status = document.getElementById('status');
 
@@ -73,11 +63,5 @@
       }
     });
   </script>
-  <!-- 🔼 Fin del bloque -->
-
-</body>
-
 </body>
 </html>
-
-
