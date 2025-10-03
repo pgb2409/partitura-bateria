@@ -29,9 +29,21 @@ function exportarPDF() {
 
 function reproducirAudio() {
   const fileInput = document.getElementById("audioInput");
-  if (fileInput.files.length === 0) return;
+  if (fileInput.files.length === 0) {
+    alert("No se ha cargado ningún archivo de audio.");
+    return;
+  }
+
   const file = fileInput.files[0];
   const url = URL.createObjectURL(file);
-  const player = new Audio(url);
-  player.play();
+  const audio = new Audio(url);
+
+  audio.oncanplaythrough = () => {
+    audio.play();
+    alert("Reproduciendo audio...");
+  };
+
+  audio.onerror = () => {
+    alert("Error al reproducir el archivo. Asegúrate de que sea un formato compatible.");
+  };
 }
