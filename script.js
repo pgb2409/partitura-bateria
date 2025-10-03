@@ -6,6 +6,7 @@ const playButton = document.getElementById("playButton");
 const exportButton = document.getElementById("exportButton");
 const saveButton = document.getElementById("savePattern");
 const loadButton = document.getElementById("loadPattern");
+const musicxmlInput = document.getElementById("musicxmlInput");
 
 let pattern = [
   "bombo", "caja", "hihat", "bombo", "caja", "hihat", "bombo", "caja",
@@ -22,7 +23,6 @@ const notaColor = {
 
 function dibujarPartitura() {
   const notaWidth = 40;
-  const notaHeight = 40;
   const spacing = 10;
   const totalWidth = pattern.length * (notaWidth + spacing);
   canvas.width = totalWidth;
@@ -31,7 +31,7 @@ function dibujarPartitura() {
 
   pattern.forEach((nota, i) => {
     ctx.fillStyle = notaColor[nota] || "#bdc3c7";
-    ctx.fillRect(i * (notaWidth + spacing), 30, notaWidth, notaHeight);
+    ctx.fillRect(i * (notaWidth + spacing), 30, notaWidth, 40);
     ctx.fillStyle = "#000";
     ctx.fillText(nota, i * (notaWidth + spacing) + 5, 25);
   });
@@ -78,13 +78,63 @@ function cargarPatron() {
   }
 }
 
-playButton.addEventListener("click", reproducirPartitura);
-exportButton.addEventListener("click", exportarPDF);
-saveButton.addEventListener("click", guardarPatron);
-loadButton.addEventListener("click", cargarPatron);
 patternInput.addEventListener("change", () => {
   pattern = patternInput.value.split(",");
   dibujarPartitura();
 });
 
+playButton.addEventListener("click", reproducirPartitura);
+exportButton.addEventListener("click", exportarPDF);
+saveButton.addEventListener("click", guardarPatron);
+loadButton.addEventListener("click", cargarPatron);
+
+// NUEVO: Cargar y dibujar MusicXML
+musicxmlInput.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const xmlText = e.target.result;
+    parseMusicXML(xmlText);
+  };
+  reader.readAsText(file);
+});
+
+function parseMusicXML(xmlText) {
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+  const notes = xmlDoc.getElementsByTagName("note");
+
+  const VF = Vex.Flow;
+  const renderer = new VF.Renderer(canvas, VF.Renderer.Backends.CANVAS);
+  renderer.resize(1000, 200);
+  const context = renderer.getContext();
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+  const stave = new VF.Stave(10, 40, 900);
+  stave.addClef("percussion").setContext(context).draw();
+
+  const vexNotes = [];
+
+  for (let i = 0; i < notes.length && i < 16; i++) {
+    const isRest = notes[i].getElementsByTagName("rest").length > 0;
+    const step = notes[i].getElementsByTagName("step")[0]?.textContent || "C";
+    const duration = notes[i].getElementsByTagName("type")[0]?.textContent || "8";
+
+    const key = isRest ? "b/4" : `${step.toLowerCase()}/4`;
+    const note = new VF.StaveNote({ clef: "percussion", keys: [key], duration: duration });
+
+    if (isRest) note.addArticulation(0, new VF.Articulation("a@a").setPosition(3));
+    vexNotes.push(note);
+  }
+
+  const voice = new VF.Voice({ num_beats: 4, beat_value: 4 });
+  voice.addTickables(vexNotes);
+
+  const formatter = new VF.Formatter().joinVoices([voice]).format([voice], 800);
+  voice.draw(context, stave);
+}
+
+// Inicializar
 dibujarPartitura();
