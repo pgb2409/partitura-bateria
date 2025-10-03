@@ -26,6 +26,58 @@
   <script src="script.js"></script>
   <!-- Actualización forzada por Pablo -->
 <!-- Actualización forzada por Pablo -->
+    <!-- ...tu contenido actual... -->
+
+  <!-- 🔽 Pegas aquí el bloque del conversor -->
+  <section id="convertidor" style="margin-top: 40px; padding: 20px; border: 1px solid #ccc;">
+    <h2>🎵 Convertir audio MP3 a MusicXML</h2>
+    <form id="uploadForm">
+      <input type="file" name="file" accept=".mp3" required>
+      <button type="submit">Convertir</button>
+    </form>
+    <p id="status" style="margin-top: 10px;"></p>
+  </section>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = form.querySelector('input[type="file"]');
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      status.textContent = "⏳ Procesando archivo...";
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const response = await fetch("https://backend-conversor-51sa.onrender.com/convert", {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) throw new Error("Error en el servidor");
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "resultado.musicxml";
+        a.click();
+        status.textContent = "✅ Conversión completada. Archivo descargado.";
+      } catch (err) {
+        status.textContent = "❌ Error: " + err.message;
+      }
+    });
+  </script>
+  <!-- 🔼 Fin del bloque -->
+
+</body>
+
 </body>
 </html>
+
 
