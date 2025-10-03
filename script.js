@@ -1,21 +1,23 @@
-window.onload = function () {
-  const VF = Vex.Flow;
-  const div = document.getElementById("partitura");
-  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
-  renderer.resize(600, 200);
-  const context = renderer.getContext();
-  const stave = new VF.Stave(10, 40, 500);
-  stave.addClef("percussion").setContext(context).draw();
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Partitura-Batería</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Partitura-Batería</h1>
 
-  const notes = [
-    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }).addArticulation(0, new VF.Articulation("a>").setPosition(3)),
-    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }).addArticulation(0, new VF.Articulation("a>").setPosition(3)),
-    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }).addArticulation(0, new VF.Articulation("a>").setPosition(3)),
-    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }).addArticulation(0, new VF.Articulation("a>").setPosition(3)),
-  ];
+  <!-- ✅ Este div es esencial para que se dibuje la partitura -->
+  <div id="partitura"></div>
 
-  const voice = new VF.Voice({ num_beats: 4, beat_value: 4 });
-  voice.addTickables(notes);
-  new VF.Formatter().joinVoices([voice]).format([voice], 400);
-  voice.draw(context, stave);
-};
+  <input type="file" id="audioInput" accept="audio/*" />
+  <button onclick="reproducirAudio()">▶️ Reproducir</button>
+  <button onclick="exportarPDF()">📄 Exportar a PDF</button>
+
+  <script src="https://unpkg.com/vexflow/releases/vexflow-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
