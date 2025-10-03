@@ -8,10 +8,10 @@ window.onload = function () {
   stave.addClef("percussion").setContext(context).draw();
 
   const notes = [
-    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }),
-    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }),
-    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }),
-    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }),
+    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }).addArticulation(0, new VF.Articulation("a>").setPosition(3)),
+    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }).addArticulation(0, new VF.Articulation("a>").setPosition(3)),
+    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }).addArticulation(0, new VF.Articulation("a>").setPosition(3)),
+    new VF.StaveNote({ keys: ["c/5"], duration: "q", clef: "percussion" }).addArticulation(0, new VF.Articulation("a>").setPosition(3)),
   ];
 
   const voice = new VF.Voice({ num_beats: 4, beat_value: 4 });
@@ -19,31 +19,3 @@ window.onload = function () {
   new VF.Formatter().joinVoices([voice]).format([voice], 400);
   voice.draw(context, stave);
 };
-
-function exportarPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.text("Partitura exportada", 10, 10);
-  doc.save("partitura.pdf");
-}
-
-function reproducirAudio() {
-  const fileInput = document.getElementById("audioInput");
-  if (fileInput.files.length === 0) {
-    alert("No se ha cargado ningún archivo de audio.");
-    return;
-  }
-
-  const file = fileInput.files[0];
-  const url = URL.createObjectURL(file);
-  const audio = new Audio(url);
-
-  audio.oncanplaythrough = () => {
-    audio.play();
-    alert("Reproduciendo audio...");
-  };
-
-  audio.onerror = () => {
-    alert("Error al reproducir el archivo. Asegúrate de que sea un formato compatible.");
-  };
-}
